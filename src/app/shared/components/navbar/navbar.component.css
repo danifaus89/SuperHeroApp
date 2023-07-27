@@ -1,0 +1,19 @@
+.logoCont{
+  display: flex;
+  justify-content: space-between;
+  max-width: 100%;
+  background-color: #173670;
+}
+
+.logo{
+  max-width: 20rem;
+  max-height: 10rem;
+}
+
+.logoCont h5{
+ padding: 2rem 3rem;
+ font-family: fantasy;
+ font-style: oblique;
+ color: white;
+
+}

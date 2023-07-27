@@ -1,0 +1,17 @@
+.footCont{
+  width: 100%;
+  height: 5rem;
+  background-color: #173670;
+  display: flex;
+  justify-content: center;
+}
+
+.footCont h5 {
+  padding: 2rem;
+  color: grey;
+}
+.footCont h5 span{
+  color: white;
+  font-family: fantasy;
+  font-style: oblique;
+}

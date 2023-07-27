@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "sha-5885"
+  },
+  "targets": {
+    "sha-5885": {
+      "hosting": {
+        "SuperHeroApp": [
+          "sha-5885"
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,176 @@
+
+<div class="titleCont">
+  <h1 class="title">SuperHero App</h1>
+</div>
+
+
+
+<div class="card">
+  <p-toast></p-toast>
+  <p-toolbar styleClass="py-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success" (click)="openNew()"></button>
+      <button pButton pRipple icon="pi pi-trash" class="p-button-danger"
+        (click)="deleteSelectedHeroes()" [disabled]="!selectedHeroes || !selectedHeroes.length"></button>
+    </ng-template>
+
+    <ng-template pTemplate="right">
+      <input #search pInputText type="search" (keyup)="searchHero(search.value)" placeholder="Search hero" />
+    </ng-template>
+  </p-toolbar>
+
+  <div class="sipnnerCont" *ngIf="loading">
+    <p-progressSpinner></p-progressSpinner>
+  </div>
+
+  <div *ngIf="!loading">
+    <p-table #dt [value]="heroes" [rows]="5" [paginator]="true"
+      [globalFilterFields]="['name', 'country.name', 'representative.name', 'status']"
+      [tableStyle]="{ 'min-width': '75rem' }" [(selection)]="selectedHeroes" [rowHover]="true" dataKey="id"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+
+      <ng-template pTemplate="header">
+        <tr>
+          <th style="width: 4rem">
+            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+          </th>
+          <th>Image</th>
+          <th pSortableColumn="name" style="min-width:2rem">Name <p-sortIcon field="name"></p-sortIcon></th>
+          <th pSortableColumn="strength">Strength <p-sortIcon field="strength"></p-sortIcon></th>
+          <th pSortableColumn="power" style="min-width:10rem">Power <p-sortIcon field="power"></p-sortIcon></th>
+          <th pSortableColumn="description" style="min-width:10rem">Description
+            <p-sortIcon field="description"></p-sortIcon>
+          </th>
+          <th></th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-heroes>
+        <tr>
+          <td>
+            <p-tableCheckbox [value]="heroes"></p-tableCheckbox>
+          </td>
+          <td>
+            <img [src]="heroes.img" [alt]="heroes.img" class="imgTable" (error)="heroes.img = errorImg" />
+          </td>
+          <td class="cap">{{ heroes.name }}</td>
+          <td><p-rating [stars]="heroes.strength" [cancel]="false" [readonly]="true"></p-rating> </td>
+          <td class="cap">{{ heroes.power }}</td>
+          <td style="width:50rem">{{ heroes.description }}</td>
+
+          <td>
+            <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success m-2"
+              (click)="openEdit(heroes)"></button>
+            <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning m-2"
+              (click)="removeHero(heroes)"></button>
+          </td>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="summary">
+        <div class="flex align-items-center justify-content-between">In total there are {{ heroes ? heroes.length : 0
+          }} heroes.</div>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+
+<!--ADD DIALOG-->
+<p-dialog [(visible)]="addHeroeDialog" [style]="{ width: '45rem' }" [header]="dialogHeader.title" [modal]="true"
+  styleClass="p-fluid">
+  <ng-template pTemplate="content">
+    <form [formGroup]="form" (ngSubmit)="addHero(form.value)">
+
+      <img [src]="heroe.img" [alt]="heroe.img" class="imgDialog" *ngIf="heroe.img" />
+
+      <div class="field">
+        <label for="name">Name</label>
+        <input type="text" pInputText id="name" formControlName="name" required autofocus />
+      </div>
+
+      <div class="field">
+        <label for="img">Image Url</label>
+        <input type="text" pInputText id="img" formControlName="img" autofocus />
+      </div>
+
+
+      <div class="field">
+        <label for="strength">Strength</label>
+        <p-rating id="strength" [cancel]="false" formControlName="strength"></p-rating>
+      </div>
+
+      <div class="formgrid grid">
+        <div class="field col">
+          <label for="power">Power</label>
+          <input type="text" pInputText id="power" formControlName="power" required autofocus />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea id="description" pInputTextarea formControlName="description" rows="5" cols="20"></textarea>
+      </div>
+
+      <hr>
+
+      <div class="row mt-4 justify-content-center">
+        <div class="col-6">
+          <button pButton pRipple label="Add" class="p-button-text" type="submit" [disabled]="form.invalid"></button>
+        </div>
+      </div>
+
+    </form>
+  </ng-template>
+</p-dialog>
+
+<!--EDIT DIALOG-->
+<p-dialog [(visible)]="editHeroeDialog" [style]="{ width: '45rem' }" [header]="dialogHeader.title" [modal]="true"
+  styleClass="p-fluid">
+  <ng-template pTemplate="content">
+
+    <form [formGroup]="form" (ngSubmit)="editHero(form.value)">
+
+      <img [src]="heroe.img" [alt]="heroe.img" class="imgDialog" *ngIf="heroe.img" />
+
+      <div class="field">
+        <label for="name">Name</label>
+        <input type="text" pInputText id="name" formControlName="name" required autofocus />
+      </div>
+
+      <div class="field">
+        <label for="img">Image Url</label>
+        <input type="text" pInputText id="img" formControlName="img" autofocus />
+      </div>
+
+
+      <div class="field">
+        <label for="strength">Strength</label>
+        <p-rating id="strength" [cancel]="false" formControlName="strength"></p-rating>
+      </div>
+
+      <div class="formgrid grid">
+        <div class="field col">
+          <label for="power">Power</label>
+          <input type="text" pInputText id="power" formControlName="power" required autofocus />
+
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="description">Description</label>
+        <textarea id="description" pInputTextarea formControlName="description" rows="5" cols="20"></textarea>
+      </div>
+      <hr>
+      <div class="row mt-4 justify-content-center">
+        <div class="col-6">
+
+          <button pButton pRipple label="Save" class="p-button-text" type="submit" [disabled]="form.invalid"></button>
+        </div>
+      </div>
+
+
+    </form>
+  </ng-template>
+
+</p-dialog>
+
+<!--confirmationService-->
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>
