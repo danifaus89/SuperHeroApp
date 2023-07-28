@@ -16,18 +16,17 @@ import { HeroesService } from 'src/app/shared/services/heroes.service';
   styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
-
   form: FormGroup;
   heroes: HeroeModel[] = [];
-  errorImg = 'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg'
-  loading: boolean = true
+  errorImg =
+    'https://static.vecteezy.com/system/resources/previews/005/337/799/original/icon-image-not-found-free-vector.jpg';
+  loading: boolean = true;
   addHeroeDialog: boolean = false;
   editHeroeDialog: boolean = false;
   dialogHeader: DialogHeader = { id: 0, title: '' };
   heroe: any;
   selectedHeroes: any[] | null;
   submitted: boolean = false;
-
 
   constructor(
     private heroesService: HeroesService,
@@ -45,15 +44,17 @@ export class HomeComponent implements OnInit {
     let text = value;
 
     if (text.length === 0) {
+      console.log('entra');
       this.heroesService.getHeroes().subscribe((resp: any) => {
         this.heroes = resp;
         console.log(this.heroes);
       });
+    } else {
+      this.heroes = this.heroes.filter((x) =>
+        x.name.includes(text.toLowerCase())
+      );
+      console.log(this.heroes);
     }
-    this.heroes = this.heroes.filter((x) =>
-      x.name.includes(text.toLowerCase())
-    );
-    console.log(this.heroes);
   }
   deleteSelectedHeroes() {
     this.confirmationService.confirm({
@@ -153,20 +154,19 @@ export class HomeComponent implements OnInit {
       console.log(error);
     }
   }
-  async getHero(id:string) {
+  async getHero(id: string) {
     console.log(id);
     const hero = (await this.heroesService.getHero(id)).data();
     console.log(hero);
     return hero;
   }
 
-
   /*PRIVATE*/
   initTable() {
-    setInterval(() => this.heroesService.getHeroes().subscribe((resp: any) => {
+    this.heroesService.getHeroes().subscribe((resp: any) => {
       this.heroes = resp;
       this.loading = false;
-    }), 1000)
+    });
   }
   openNew() {
     this.dialogHeader = { id: 1, title: 'Add a new superhero' };
@@ -219,5 +219,4 @@ export class HomeComponent implements OnInit {
       description: new FormControl('', []),
     });
   }
-
 }
