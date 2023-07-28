@@ -42,18 +42,15 @@ export class HomeComponent implements OnInit {
 
   searchHero(value: any) {
     let text = value;
-
     if (text.length === 0) {
       console.log('entra');
       this.heroesService.getHeroes().subscribe((resp: any) => {
         this.heroes = resp;
-        console.log(this.heroes);
       });
     } else {
       this.heroes = this.heroes.filter((x) =>
         x.name.includes(text.toLowerCase())
       );
-      console.log(this.heroes);
     }
   }
   deleteSelectedHeroes() {
